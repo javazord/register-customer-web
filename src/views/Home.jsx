@@ -1,7 +1,9 @@
 function Home() {
   return (
     <>
-      <h1>Tela Home</h1>
+      <div>
+        <h1 className="container">Tela Home</h1>
+      </div>
     </>
   );
 }
