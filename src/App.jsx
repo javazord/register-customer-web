@@ -3,6 +3,7 @@ import Home from "./views/Home";
 import Navbar from "./views/Navbar/Navbar";
 import CustomerRegister from "./views/customer/CustomerRegister";
 import CustomerList from "./views/customer/CustomerList";
+import About from "./views/about/about";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/registercustomer" element={<CustomerRegister />} />
         <Route path="/listcustomer" element={<CustomerList />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </>
   );
