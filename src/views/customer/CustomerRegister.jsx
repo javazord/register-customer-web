@@ -1,5 +1,4 @@
-import { Field, Input, Label } from "@headlessui/react";
-import clsx from "clsx";
+import CustomerRegisterForm from "./CustomerRegisterForm";
 
 export default function CustomerRegister() {
   return (
@@ -13,7 +12,7 @@ export default function CustomerRegister() {
       </header>
 
       <main>
-        <div className="w-screen h-screen bg-gray-900 flex justify-center"></div>
+        <CustomerRegisterForm />
       </main>
     </>
   );
