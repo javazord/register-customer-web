@@ -1,22 +1,11 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./views/Home";
 import Navbar from "./views/Navbar/Navbar";
-import CustomerRegister from "./views/customer/CustomerRegister";
-import CustomerList from "./views/customer/CustomerList";
-import About from "./views/about/about";
+import AppRoutes from "./routes/AppRoutes";
 
 export default function App() {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/registercustomer" element={<CustomerRegister />} />
-        <Route path="/listcustomer" element={<CustomerList />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <AppRoutes />
     </>
   );
 }
