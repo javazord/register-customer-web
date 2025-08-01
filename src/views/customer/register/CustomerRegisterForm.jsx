@@ -13,6 +13,7 @@ import clsx from "clsx";
 import useCustomerForm from "../../../hooks/useCustomerForm";
 import { states } from "../../../data/states";
 import { useState } from "react";
+import CustomerService from "../../../app/service/customer/customerService";
 
 export default function CustomerRegisterForm() {
   const {
@@ -23,6 +24,7 @@ export default function CustomerRegisterForm() {
     handleChangeEmail,
   } = useCustomerForm();
   const [query, setQuery] = useState("");
+  const service = new CustomerService();
 
   const filteredStates =
     query === ""
@@ -30,6 +32,16 @@ export default function CustomerRegisterForm() {
       : states.filter((state) =>
           state.nome.toLowerCase().includes(query.toLowerCase())
         );
+
+  const create = () => {
+    try {
+      service.save(formData).then((response) => {
+        response.data;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -213,7 +225,10 @@ export default function CustomerRegisterForm() {
           </Fieldset>
 
           <div className="grid justify-end">
-            <Button className="block mt-3 rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500">
+            <Button
+              className="block mt-3 rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500"
+              onClick={create}
+            >
               Salvar
             </Button>
           </div>
