@@ -1,9 +1,9 @@
 function Home() {
   return (
     <>
-      <div>
-        <h1 className="container">Tela Home</h1>
-      </div>
+      <main className="w-auto h-screen justify-center">
+        <h1 className="container text-white">Tela Home</h1>
+      </main>
     </>
   );
 }

@@ -8,6 +8,11 @@ export default function useCustomerForm() {
     lastName: "",
     cpf: "",
     email: "",
+    phone: "",
+    state: "",
+    city: "",
+    district: "",
+    zipCode: "",
     error: "",
   });
 
