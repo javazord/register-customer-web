@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import CustomerRegisterForm from "../views/customer/CustomerRegisterForm";
-import CustomerList from "../views/customer/CustomerList";
 import Home from "../views/Home";
 import About from "../views/about/About";
+import CustomerRegisterForm from "../views/customer/register/CustomerRegisterForm";
+import CustomerList from "../views/customer/list/CustomerList";
 
 export default function AppRoutes() {
   return (

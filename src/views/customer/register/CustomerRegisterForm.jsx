@@ -4,14 +4,32 @@ import {
   Input,
   Fieldset,
   Button,
-  Select,
+  Combobox,
+  ComboboxInput,
+  ComboboxOptions,
+  ComboboxOption,
 } from "@headlessui/react";
 import clsx from "clsx";
-import useCustomerForm from "../../hooks/useCustomerForm";
+import useCustomerForm from "../../../hooks/useCustomerForm";
+import { states } from "../../../data/states";
+import { useState } from "react";
 
 export default function CustomerRegisterForm() {
-  const { formData, handleChange, getFormattedCpf, handleChangeEmail } =
-    useCustomerForm();
+  const {
+    formData,
+    handleChange,
+    handleChangeState,
+    getFormattedCpf,
+    handleChangeEmail,
+  } = useCustomerForm();
+  const [query, setQuery] = useState("");
+
+  const filteredStates =
+    query === ""
+      ? states
+      : states.filter((state) =>
+          state.nome.toLowerCase().includes(query.toLowerCase())
+        );
 
   return (
     <>
@@ -22,8 +40,8 @@ export default function CustomerRegisterForm() {
           </h1>
         </div>
       </header>
-      <main className="w-auto h-screen justify-center">
-        <div className="shadow-sm bg-slate-700 border border-white p-3 m-5">
+      <main className="h-screen">
+        <div className="max-w-4xl mx-auto shadow-sm bg-slate-700 border rounded-lg border-white p-3 m-5">
           <Fieldset className="grid grid-cols-2 gap-4">
             <Field>
               <Label className="text-sm/6 font-medium text-white">Name</Label>
@@ -52,7 +70,6 @@ export default function CustomerRegisterForm() {
               />
             </Field>
           </Fieldset>
-
           <Fieldset className="grid grid-cols-3 gap-4">
             <Field>
               <Label className="block text-sm/6 font-medium text-white">
@@ -98,7 +115,7 @@ export default function CustomerRegisterForm() {
                 className={clsx(
                   "block w-full border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-sm/6 text-white "
                 )}
-                type="number"
+                type="text"
                 name="phone"
                 value={formData.phone}
                 placeholder="(99) 99999-9999"
@@ -107,24 +124,51 @@ export default function CustomerRegisterForm() {
             </Field>
           </Fieldset>
 
-          <div className="divide-x-4 border border-1 border-dashed mt-5 mb-4"></div>
+          <div className="flex items-center gap-1 mt-10 ">
+            <div className="w-10 divide-x-0 border border-1 border-dashed"></div>
+            <p className="font-bold text-white pb-1">Address</p>
+            <div className="flex-1 divide-x-0 border border-1 border-dashed"></div>
+          </div>
 
           <Fieldset className="grid grid-cols-4 gap-4">
             <Field>
               <Label className="text-sm/6 font-medium text-white">State</Label>
-              <Select
-                className={clsx(
-                  "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
-                )}
-                type="text"
+              <Combobox
+                value={states.find((s) => s.nome === formData.state) || ""}
                 name="state"
-                value={formData.state}
-                onChange={handleChange}
+                onChange={handleChangeState}
               >
-                <option></option>
-                <option></option>
-                <option></option>
-              </Select>
+                <ComboboxInput
+                  className={clsx(
+                    "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+                  )}
+                  onChange={(event) => setQuery(event.target.value)}
+                  displayValue={(state) => state?.nome || ""}
+                  name="state"
+                />
+                <ComboboxOptions className="absolute mt-1 max-h-60 overflow-auto rounded-md bg-white shadow-lg">
+                  {filteredStates.length === 0 ? (
+                    <div className="px-4 py-2 text-gray-500">
+                      Nenhum estado encontrado
+                    </div>
+                  ) : (
+                    filteredStates.map((state) => (
+                      <ComboboxOption
+                        key={state.sigla}
+                        value={state}
+                        className={({ active }) =>
+                          clsx(
+                            "cursor-default select-none px-4 py-2",
+                            active ? "bg-blue-500 text-white" : "text-gray-900"
+                          )
+                        }
+                      >
+                        {state.nome}
+                      </ComboboxOption>
+                    ))
+                  )}
+                </ComboboxOptions>
+              </Combobox>
             </Field>
             <Field>
               <Label className="text-sm/6 font-medium text-white">City</Label>

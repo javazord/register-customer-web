@@ -24,6 +24,13 @@ export default function useCustomerForm() {
     }));
   };
 
+  const handleChangeState = (value) => {
+    setFormData((prev) => ({
+      ...prev,
+      state: value.nome,
+    }));
+  };
+
   const handleChangeCpf = (e) => {
     const { name, value } = e.target;
 
@@ -57,5 +64,6 @@ export default function useCustomerForm() {
     handleChange,
     handleChangeEmail,
     getFormattedCpf,
+    handleChangeState,
   };
 }
