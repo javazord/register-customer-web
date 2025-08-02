@@ -2,7 +2,7 @@ import ApiService from "../../apiService";
 
 export default class CustomerService extends ApiService {
   constructor() {
-    super("api/customer");
+    super("api/customers");
   }
 
   save(user) {

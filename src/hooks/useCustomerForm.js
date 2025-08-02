@@ -9,25 +9,50 @@ export default function useCustomerForm() {
     cpf: "",
     email: "",
     phone: "",
-    state: "",
-    city: "",
-    district: "",
-    zipCode: "",
+    addresses: [
+      {
+        street: "",
+        state: "",
+        city: "",
+        district: "",
+        zipCode: "",
+      },
+    ],
     error: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    // Para campos como 'addresses.state'
+    if (name.includes("addresses.")) {
+      const key = name.split(".")[1];
+      setFormData((prev) => ({
+        ...prev,
+        addresses: [
+          {
+            ...prev.addresses[0],
+            [key]: value,
+          },
+        ],
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleChangeState = (value) => {
     setFormData((prev) => ({
       ...prev,
-      state: value.nome,
+      addresses: [
+        {
+          ...prev.addresses[0],
+          state: value.nome,
+        },
+      ],
     }));
   };
 

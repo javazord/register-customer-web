@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = process.env.REACT_APP_API_URL;
+const baseURL = import.meta.env.VITE_API_URL;
 
 const httpClient = axios.create({
   baseURL: baseURL,
@@ -13,6 +13,7 @@ export default class ApiService {
 
   post(url, obj) {
     const request = `${this.apiURL}${url}`;
+    console.log(obj);
     return httpClient.post(request, obj);
   }
 

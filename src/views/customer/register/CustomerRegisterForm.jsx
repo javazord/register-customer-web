@@ -35,6 +35,7 @@ export default function CustomerRegisterForm() {
 
   const create = () => {
     try {
+      console.log("Payload enviado:", JSON.stringify(formData, null, 2)); // 👈 log importante
       service.save(formData).then((response) => {
         response.data;
       });
@@ -54,6 +55,7 @@ export default function CustomerRegisterForm() {
       </header>
       <main className="h-screen">
         <div className="max-w-4xl mx-auto shadow-sm bg-slate-700 border rounded-lg border-white p-3 m-5">
+          {/* - PESSOAL - */}
           <Fieldset className="grid grid-cols-2 gap-4">
             <Field>
               <Label className="text-sm/6 font-medium text-white">Name</Label>
@@ -112,9 +114,8 @@ export default function CustomerRegisterForm() {
                 name="email"
                 value={formData.email}
                 placeholder="fulano@gmail.com"
-                onChange={handleChangeEmail}
+                onChange={handleChange}
               />
-              {console.log(formData.error)}
               {formData.error && (
                 <p className="text-red-500 text-sm">{formData.error}</p>
               )}
@@ -136,18 +137,23 @@ export default function CustomerRegisterForm() {
             </Field>
           </Fieldset>
 
+          {/* - DIVISOR - */}
           <div className="flex items-center gap-1 mt-10 ">
             <div className="w-10 divide-x-0 border border-1 border-dashed"></div>
             <p className="font-bold text-white pb-1">Address</p>
             <div className="flex-1 divide-x-0 border border-1 border-dashed"></div>
           </div>
 
+          {/* - ENDEREÇO - */}
           <Fieldset className="grid grid-cols-4 gap-4">
             <Field>
               <Label className="text-sm/6 font-medium text-white">State</Label>
               <Combobox
-                value={states.find((s) => s.nome === formData.state) || ""}
-                name="state"
+                value={
+                  states.find((s) => s.nome === formData.addresses[0]?.state) ||
+                  ""
+                }
+                name="addresses.state"
                 onChange={handleChangeState}
               >
                 <ComboboxInput
@@ -156,7 +162,7 @@ export default function CustomerRegisterForm() {
                   )}
                   onChange={(event) => setQuery(event.target.value)}
                   displayValue={(state) => state?.nome || ""}
-                  name="state"
+                  name="addresses.state"
                 />
                 <ComboboxOptions className="absolute mt-1 max-h-60 overflow-auto rounded-md bg-white shadow-lg">
                   {filteredStates.length === 0 ? (
@@ -189,8 +195,20 @@ export default function CustomerRegisterForm() {
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
                 type="text"
-                name="city"
-                value={formData.city}
+                name="addresses.city"
+                value={formData.addresses.city}
+                onChange={handleChange}
+              />
+            </Field>
+            <Field>
+              <Label className="text-sm/6 font-medium text-white">Street</Label>
+              <Input
+                className={clsx(
+                  "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+                )}
+                type="text"
+                name="addresses.street"
+                value={formData.addresses.street}
                 onChange={handleChange}
               />
             </Field>
@@ -203,8 +221,8 @@ export default function CustomerRegisterForm() {
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
                 type="text"
-                name="district"
-                value={formData.district}
+                name="addresses.district"
+                value={formData.addresses.district}
                 onChange={handleChange}
               />
             </Field>
@@ -217,8 +235,8 @@ export default function CustomerRegisterForm() {
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
                 type="text"
-                name="zipCode"
-                value={formData.zipCode}
+                name="addresses.zipCode"
+                value={formData.addresses.zipCode}
                 onChange={handleChange}
               />
             </Field>
