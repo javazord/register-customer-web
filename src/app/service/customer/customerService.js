@@ -13,8 +13,12 @@ export default class CustomerService extends ApiService {
     return this.put(`/${user.id}`, user);
   }
 
-  delete(id) {
+  erase(id) {
     return this.delete(`/${id}`);
+  }
+
+  getAll() {
+    return this.get("");
   }
 
   search(userFilter) {

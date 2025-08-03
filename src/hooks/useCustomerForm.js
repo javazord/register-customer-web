@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatCpf } from "../utils/formatters";
-import { isValidEmail } from "../utils/validators";
+import { isValidEmail, validateField } from "../utils/validators";
 
 export default function useCustomerForm() {
   const [formData, setFormData] = useState({
@@ -9,32 +9,45 @@ export default function useCustomerForm() {
     cpf: "",
     email: "",
     phone: "",
-    addresses: [
-      {
-        street: "",
-        state: "",
-        city: "",
-        district: "",
-        zipCode: "",
-      },
-    ],
+    address: {
+      street: "",
+      state: "",
+      city: "",
+      district: "",
+      zipCode: "",
+    },
     error: "",
   });
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    lastName: "",
+    cpf: "",
+    email: "",
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (eOrName, maybeValue) => {
+    let name, value;
 
-    // Para campos como 'addresses.state'
-    if (name.includes("addresses.")) {
+    // Caso 1: evento do input comum
+    if (typeof eOrName === "object" && eOrName.target) {
+      name = eOrName.target.name;
+      value = eOrName.target.value;
+    }
+    // Caso 2: chamada direta (ex: handleChange("address.state", { nome: "Sao Paulo" }))
+    else {
+      name = eOrName;
+      // Ex: value = "SP" se for um objeto { nome: "Sao Paulo" }
+      value = maybeValue?.nome ?? maybeValue;
+    }
+
+    if (name.includes("address.")) {
       const key = name.split(".")[1];
       setFormData((prev) => ({
         ...prev,
-        addresses: [
-          {
-            ...prev.addresses[0],
-            [key]: value,
-          },
-        ],
+        address: {
+          ...prev.address,
+          [key]: value,
+        },
       }));
     } else {
       setFormData((prev) => ({
@@ -42,53 +55,22 @@ export default function useCustomerForm() {
         [name]: value,
       }));
     }
-  };
 
-  const handleChangeState = (value) => {
-    setFormData((prev) => ({
+    // Validação
+    const errorMsg = validateField(name, value);
+    setFormErrors((prev) => ({
       ...prev,
-      addresses: [
-        {
-          ...prev.addresses[0],
-          state: value.nome,
-        },
-      ],
+      [name]: errorMsg,
     }));
-  };
-
-  const handleChangeCpf = (e) => {
-    const { name, value } = e.target;
-
-    let finalValue = value;
-    if (name === "cpf") {
-      finalValue = value.replace(/\D/g, "").slice(0, 11);
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: finalValue,
-    }));
-  };
-
-  const handleChangeEmail = (e) => {
-    const value = e.target.value;
-    setFormData(value);
-
-    // Validação em tempo real (opcional)
-    if (!isValidEmail(value)) {
-      setFormData("Digite um e-mail válido.");
-    } else {
-      setFormData("");
-    }
   };
 
   const getFormattedCpf = () => formatCpf(formData.cpf);
 
   return {
     formData,
+    formErrors,
+    setFormErrors,
     handleChange,
-    handleChangeEmail,
     getFormattedCpf,
-    handleChangeState,
   };
 }

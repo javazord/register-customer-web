@@ -14,15 +14,14 @@ import useCustomerForm from "../../../hooks/useCustomerForm";
 import { states } from "../../../data/states";
 import { useState } from "react";
 import CustomerService from "../../../app/service/customer/customerService";
+import Dialog from "../../../components/modal/Dialog";
+import { validateForm } from "../../../utils/validators";
 
 export default function CustomerRegisterForm() {
-  const {
-    formData,
-    handleChange,
-    handleChangeState,
-    getFormattedCpf,
-    handleChangeEmail,
-  } = useCustomerForm();
+  const { formData, formErrors, setFormErrors, handleChange, getFormattedCpf } =
+    useCustomerForm();
+  const [error, setError] = useState(null);
+  const [msg, setMsg] = useState(null);
   const [query, setQuery] = useState("");
   const service = new CustomerService();
 
@@ -34,14 +33,20 @@ export default function CustomerRegisterForm() {
         );
 
   const create = () => {
-    try {
-      console.log("Payload enviado:", JSON.stringify(formData, null, 2)); // 👈 log importante
-      service.save(formData).then((response) => {
-        response.data;
+    const errors = validateForm(formData); // valida tudo
+    setFormErrors(errors); // atualiza os erros na tela
+
+    const hasErrors = Object.values(errors).some((error) => error);
+    if (hasErrors) return;
+    service
+      .save(formData)
+      .then((response) => {
+        setMsg("Customer saved successfully!");
+        setError(null);
+      })
+      .catch((erro) => {
+        setError(erro.response?.data?.error || "Unexpected error");
       });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -53,8 +58,8 @@ export default function CustomerRegisterForm() {
           </h1>
         </div>
       </header>
-      <main className="h-screen">
-        <div className="max-w-4xl mx-auto shadow-sm bg-slate-700 border rounded-lg border-white p-3 m-5">
+      <main className="">
+        <div className="max-w-4xl mx-auto bg-gray-800 shadow-md shadow-slate-700 rounded-lg  p-3 m-5">
           {/* - PESSOAL - */}
           <Fieldset className="grid grid-cols-2 gap-4">
             <Field>
@@ -67,7 +72,11 @@ export default function CustomerRegisterForm() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                aria-hidden={true}
               />
+              {formErrors.name && (
+                <p className="text-red-500 text-sm">{formErrors.name}</p>
+              )}
             </Field>
             <Field>
               <Label className="block text-sm/6 font-medium text-white">
@@ -82,6 +91,9 @@ export default function CustomerRegisterForm() {
                 value={formData.lastName}
                 onChange={handleChange}
               />
+              {formErrors.lastName && (
+                <p className="text-red-500 text-sm">{formErrors.lastName}</p>
+              )}
             </Field>
           </Fieldset>
           <Fieldset className="grid grid-cols-3 gap-4">
@@ -101,6 +113,9 @@ export default function CustomerRegisterForm() {
                 onChange={handleChange}
                 placeholder="000.000.000-00"
               />
+              {formErrors.cpf && (
+                <p className="text-red-500 text-sm">{formErrors.cpf}</p>
+              )}
             </Field>
             <Field>
               <Label className="block text-sm/6 font-medium text-white">
@@ -116,8 +131,8 @@ export default function CustomerRegisterForm() {
                 placeholder="fulano@gmail.com"
                 onChange={handleChange}
               />
-              {formData.error && (
-                <p className="text-red-500 text-sm">{formData.error}</p>
+              {formErrors.email && (
+                <p className="text-red-500 text-sm">{formErrors.email}</p>
               )}
             </Field>
             <Field>
@@ -145,16 +160,15 @@ export default function CustomerRegisterForm() {
           </div>
 
           {/* - ENDEREÇO - */}
-          <Fieldset className="grid grid-cols-4 gap-4">
+          <Fieldset className="grid grid-cols-3 gap-4">
             <Field>
               <Label className="text-sm/6 font-medium text-white">State</Label>
               <Combobox
                 value={
-                  states.find((s) => s.nome === formData.addresses[0]?.state) ||
-                  ""
+                  states.find((s) => s.nome === formData.address.state) || ""
                 }
-                name="addresses.state"
-                onChange={handleChangeState}
+                name="address.state"
+                onChange={(value) => handleChange("address.state", value)}
               >
                 <ComboboxInput
                   className={clsx(
@@ -162,8 +176,13 @@ export default function CustomerRegisterForm() {
                   )}
                   onChange={(event) => setQuery(event.target.value)}
                   displayValue={(state) => state?.nome || ""}
-                  name="addresses.state"
+                  name="address.state"
                 />
+                {formErrors["address.state"] && (
+                  <p className="text-red-500 text-sm">
+                    {formErrors["address.state"]}
+                  </p>
+                )}
                 <ComboboxOptions className="absolute mt-1 max-h-60 overflow-auto rounded-md bg-white shadow-lg">
                   {filteredStates.length === 0 ? (
                     <div className="px-4 py-2 text-gray-500">
@@ -195,34 +214,8 @@ export default function CustomerRegisterForm() {
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
                 type="text"
-                name="addresses.city"
-                value={formData.addresses.city}
-                onChange={handleChange}
-              />
-            </Field>
-            <Field>
-              <Label className="text-sm/6 font-medium text-white">Street</Label>
-              <Input
-                className={clsx(
-                  "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
-                )}
-                type="text"
-                name="addresses.street"
-                value={formData.addresses.street}
-                onChange={handleChange}
-              />
-            </Field>
-            <Field>
-              <Label className="text-sm/6 font-medium text-white">
-                District
-              </Label>
-              <Input
-                className={clsx(
-                  "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
-                )}
-                type="text"
-                name="addresses.district"
-                value={formData.addresses.district}
+                name="address.city"
+                value={formData.address.city}
                 onChange={handleChange}
               />
             </Field>
@@ -235,8 +228,36 @@ export default function CustomerRegisterForm() {
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
                 type="text"
-                name="addresses.zipCode"
-                value={formData.addresses.zipCode}
+                name="address.zipCode"
+                value={formData.address.zipCode}
+                onChange={handleChange}
+              />
+            </Field>
+          </Fieldset>
+          <Fieldset className="grid grid-cols-2 gap-4">
+            <Field>
+              <Label className="text-sm/6 font-medium text-white">Street</Label>
+              <Input
+                className={clsx(
+                  "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+                )}
+                type="text"
+                name="address.street"
+                value={formData.address.street}
+                onChange={handleChange}
+              />
+            </Field>
+            <Field>
+              <Label className="text-sm/6 font-medium text-white">
+                District
+              </Label>
+              <Input
+                className={clsx(
+                  "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+                )}
+                type="text"
+                name="address.district"
+                value={formData.address.district}
                 onChange={handleChange}
               />
             </Field>
@@ -247,11 +268,23 @@ export default function CustomerRegisterForm() {
               className="block mt-3 rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500"
               onClick={create}
             >
-              Salvar
+              Save
             </Button>
           </div>
         </div>
       </main>
+
+      {/* Renderiza o diálogo somente se houver erro */}
+      {(error || msg) && (
+        <Dialog
+          erro={error}
+          msg={msg}
+          onClose={() => {
+            setError(null);
+            setMsg(null);
+          }}
+        />
+      )}
     </>
   );
 }
