@@ -33,7 +33,6 @@ export default function CustomerRegisterForm() {
   const [isEditing, setIsEditing] = useState(false);
   const service = new CustomerService();
   const location = useLocation();
-
   const filteredStates =
     query === ""
       ? states
@@ -224,7 +223,7 @@ export default function CustomerRegisterForm() {
             <Label className="text-sm/6 font-medium text-white">State</Label>
             <Combobox
               value={
-                states.find((s) => s.nome === formData.address.state) || ""
+                states.find((s) => s.nome === formData.address?.state) || ""
               }
               name="address.state"
               onChange={(value) => handleChange("address.state", value)}
@@ -274,7 +273,7 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="address.city"
-              value={formData.address.city}
+              value={formData.address?.city || ""}
               onChange={handleChange}
             />
           </Field>
@@ -286,7 +285,7 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="address.zipCode"
-              value={formData.address.zipCode}
+              value={formData.address?.zipCode || ""}
               onChange={handleChange}
             />
           </Field>
@@ -300,7 +299,7 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="address.street"
-              value={formData.address.street}
+              value={formData.address?.street || ""}
               onChange={handleChange}
             />
           </Field>
@@ -312,7 +311,7 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="address.district"
-              value={formData.address.district}
+              value={formData.address?.district || ""}
               onChange={handleChange}
             />
           </Field>

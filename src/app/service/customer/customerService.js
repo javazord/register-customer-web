@@ -21,6 +21,14 @@ export default class CustomerService extends ApiService {
     return this.get(`/all`);
   }
 
+  getCountCustomers() {
+    return this.get(`/count-customers`);
+  }
+
+  getLastRegisters() {
+    return this.get(`/last-registers`);
+  }
+
   search(userFilter) {
     let params = "";
     if (userFilter.email) {

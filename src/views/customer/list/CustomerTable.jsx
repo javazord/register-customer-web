@@ -145,7 +145,7 @@ export default function CustomerTable({ customers }) {
                       {customer.cpf}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.address.state}
+                      {customer.address?.state}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex gap-4 items-center">
