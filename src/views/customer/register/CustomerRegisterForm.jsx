@@ -49,6 +49,30 @@ export default function CustomerRegisterForm() {
     }
   }, [location.state]);
 
+  const resetFormData = () => {
+    setFormData({
+      name: "",
+      lastName: "",
+      cpf: "",
+      email: "",
+      phone: "",
+      address: {
+        street: "",
+        state: "",
+        city: "",
+        district: "",
+        zipCode: "",
+      },
+      error: "",
+    });
+    setFormErrors({
+      name: "",
+      lastName: "",
+      cpf: "",
+      email: "",
+    });
+  };
+
   const create = () => {
     const errors = validateForm(formData); // valida tudo
     setFormErrors(errors); // atualiza os erros na tela
@@ -60,6 +84,7 @@ export default function CustomerRegisterForm() {
       .then((response) => {
         setMsg("Customer saved successfully!");
         setError(null);
+        resetFormData();
       })
       .catch((erro) => {
         setError(erro.response?.data?.error || "Unexpected error");
@@ -77,6 +102,7 @@ export default function CustomerRegisterForm() {
       .then((response) => {
         setMsg("Customer saved successfully!");
         setError(null);
+        resetFormData();
       })
       .catch((erro) => {
         setError(erro.response?.data?.error || "Unexpected error");
