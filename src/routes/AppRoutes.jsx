@@ -11,6 +11,7 @@ export default function AppRoutes() {
       <Route path="/dashboard" element={<Home />} />
       <Route path="/home" element={<Home />} />
       <Route path="/registercustomer" element={<CustomerRegisterForm />} />
+      <Route path="/editcustomer" element={<CustomerRegisterForm />} />
       <Route path="/listcustomer" element={<CustomerList />} />
       <Route path="/about" element={<About />} />
     </Routes>

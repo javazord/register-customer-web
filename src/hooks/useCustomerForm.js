@@ -68,6 +68,7 @@ export default function useCustomerForm() {
 
   return {
     formData,
+    setFormData,
     formErrors,
     setFormErrors,
     handleChange,

@@ -1,9 +1,11 @@
 function Home() {
   return (
     <>
-      <main className="justify-center">
-        <h1 className="container text-white">Tela Home</h1>
-      </main>
+      <header>
+        <div className="max-w-5xl mx-auto py-6">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Home</h1>
+        </div>
+      </header>
     </>
   );
 }
