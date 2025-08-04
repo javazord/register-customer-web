@@ -2,6 +2,8 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import CustomerService from "../../../app/service/customer/customerService";
 import Dialog from "../../../components/modal/Dialog";
+import { Button, Field, Fieldset, Input, Label } from "@headlessui/react";
+import clsx from "clsx";
 
 export default function CustomerTable({ customers }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,6 +12,10 @@ export default function CustomerTable({ customers }) {
   const [customerList, setCustomerList] = useState([]);
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
+  const [customer, setCustomer] = useState({
+    cpf: "",
+    email: "",
+  });
   const service = new CustomerService();
 
   // atualiza customerList sempre que "customers" mudar
@@ -36,6 +42,17 @@ export default function CustomerTable({ customers }) {
     console.log(customer);
   };
 
+  const searchCustomer = () => {
+    try {
+      service.search(customer).then((response) => {
+        console.log(response.data);
+        setCustomerList(response.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const deleteCustomer = (id) => {
     service
       .erase(id)
@@ -49,8 +66,49 @@ export default function CustomerTable({ customers }) {
       });
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCustomer((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <>
+      <div className=" overflow-x-auto p-6 text-sm justify-start">
+        <Fieldset className="grid grid-cols-3 gap-4">
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">CPF</Label>
+            <Input
+              className={clsx(
+                "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+              )}
+              type="text"
+              name="cpf"
+              value={customer.cpf}
+              onChange={handleChange}
+            />
+          </Field>
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">Email</Label>
+            <Input
+              className={clsx(
+                "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+              )}
+              type="text"
+              name="email"
+              value={customer.email}
+              onChange={handleChange}
+            />
+          </Field>
+          <div className="flex items-end h-full">
+            <Button
+              className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500"
+              onClick={searchCustomer}
+            >
+              Search
+            </Button>
+          </div>
+        </Fieldset>
+      </div>
       <div className="overflow-x-auto p-6 bg-gray-900 text-white">
         <div className="max-w-5xl mx-auto bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
           <div className="max-h-96 overflow-y-auto">

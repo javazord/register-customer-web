@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatCpf } from "../utils/formatters";
-import { isValidEmail, validateField } from "../utils/validators";
+import { validateField } from "../utils/validators";
 
 export default function useCustomerForm() {
   const [formData, setFormData] = useState({

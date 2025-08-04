@@ -18,19 +18,17 @@ export default class CustomerService extends ApiService {
   }
 
   getAll() {
-    return this.get("");
+    return this.get(`/all`);
   }
 
   search(userFilter) {
     let params = "";
-    if (userFilter.name) {
-      params += `?name=${userFilter.name}`;
-    }
-    if (userFilter.lastName) {
-      params += `?lastName=${userFilter.lastName}`;
+    if (userFilter.email) {
+      params += `?email=${userFilter.email}`;
     }
     if (userFilter.cpf) {
       params += `?cpf=${userFilter.cpf}`;
     }
+    return this.get(params);
   }
 }
