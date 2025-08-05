@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { formatCpf } from "../utils/formatters";
-import { validateField } from "../utils/validators";
+import { validateField, validateForm } from "../utils/validators";
+import CustomerService from "../app/service/customer/customerService";
 
 export default function useCustomerForm() {
   const [formData, setFormData] = useState({
@@ -24,6 +25,71 @@ export default function useCustomerForm() {
     cpf: "",
     email: "",
   });
+
+  const [error, setError] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const service = new CustomerService();
+
+  const resetFormData = () => {
+    setFormData({
+      name: "",
+      lastName: "",
+      cpf: "",
+      email: "",
+      phone: "",
+      address: {
+        street: "",
+        state: "",
+        city: "",
+        district: "",
+        zipCode: "",
+      },
+      error: "",
+    });
+    setFormErrors({
+      name: "",
+      lastName: "",
+      cpf: "",
+      email: "",
+    });
+  };
+
+  const create = () => {
+    const errors = validateForm(formData); // valida os campos no submit
+    setFormErrors(errors); // atualiza os erros na tela
+
+    const hasErrors = Object.values(errors).some((error) => error);
+    if (hasErrors) return;
+    service
+      .save(formData)
+      .then((response) => {
+        setMsg("Customer saved successfully!");
+        setError(null);
+        resetFormData();
+      })
+      .catch((erro) => {
+        setError(erro.response?.data?.error || "Unexpected error");
+      });
+  };
+
+  const update = () => {
+    const errors = validateForm(formData); // valida tudo
+    setFormErrors(errors); // atualiza os erros na tela
+
+    const hasErrors = Object.values(errors).some((error) => error);
+    if (hasErrors) return;
+    service
+      .update(formData)
+      .then((response) => {
+        setMsg("Customer saved successfully!");
+        setError(null);
+        resetFormData();
+      })
+      .catch((erro) => {
+        setError(erro.response?.data?.error || "Unexpected error");
+      });
+  };
 
   const handleChange = (eOrName, maybeValue) => {
     let name, value;
@@ -56,7 +122,7 @@ export default function useCustomerForm() {
       }));
     }
 
-    // Validação
+    // Validação dos inputs
     const errorMsg = validateField(name, value);
     setFormErrors((prev) => ({
       ...prev,
@@ -73,5 +139,14 @@ export default function useCustomerForm() {
     setFormErrors,
     handleChange,
     getFormattedCpf,
+    error,
+    setError,
+    msg,
+    setMsg,
+    isEditing,
+    setIsEditing,
+    resetFormData,
+    create,
+    update,
   };
 }

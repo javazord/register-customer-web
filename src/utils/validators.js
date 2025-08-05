@@ -1,3 +1,4 @@
+//verificar se campo não está vazio
 export const isNotEmpty = (value) => {
   return value && value.trim() !== "";
 };

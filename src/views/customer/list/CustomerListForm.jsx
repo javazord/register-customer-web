@@ -12,7 +12,7 @@ export default function CustomerListForm() {
         const response = await service.getAll(); // axios retorna um objeto
         setCustomers(response.data); // pega só os dados
       } catch (error) {
-        console.error("Erro ao buscar clientes:", error);
+        console.error("Erro search customers:", error);
       }
     }
 

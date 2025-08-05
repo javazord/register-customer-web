@@ -10,29 +10,31 @@ import {
   ComboboxOption,
 } from "@headlessui/react";
 import clsx from "clsx";
-import useCustomerForm from "../../../hooks/useCustomerForm";
 import { states } from "../../../data/states";
-import { useEffect, useState } from "react";
-import CustomerService from "../../../app/service/customer/customerService";
 import Dialog from "../../../components/modal/Dialog";
-import { validateForm } from "../../../utils/validators";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import useCustomerForm from "../../../hooks/useCustomerForm";
 
 export default function CustomerRegisterForm() {
+  const location = useLocation();
   const {
     formData,
-    setFormData,
     formErrors,
-    setFormErrors,
+    error,
+    msg,
+    isEditing,
     handleChange,
+    create,
+    update,
+    resetFormData,
     getFormattedCpf,
+    setFormData,
+    setIsEditing,
+    setError,
+    setMsg,
   } = useCustomerForm();
-  const [error, setError] = useState(null);
-  const [msg, setMsg] = useState(null);
   const [query, setQuery] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const service = new CustomerService();
-  const location = useLocation();
   const filteredStates =
     query === ""
       ? states
@@ -44,76 +46,20 @@ export default function CustomerRegisterForm() {
   useEffect(() => {
     if (location.state?.customer) {
       setFormData(location.state.customer);
+      console.log(location.state.customer);
       setIsEditing(true);
+    } else {
+      resetFormData();
+      setIsEditing(false);
     }
   }, [location.state]);
-
-  const resetFormData = () => {
-    setFormData({
-      name: "",
-      lastName: "",
-      cpf: "",
-      email: "",
-      phone: "",
-      address: {
-        street: "",
-        state: "",
-        city: "",
-        district: "",
-        zipCode: "",
-      },
-      error: "",
-    });
-    setFormErrors({
-      name: "",
-      lastName: "",
-      cpf: "",
-      email: "",
-    });
-  };
-
-  const create = () => {
-    const errors = validateForm(formData); // valida tudo
-    setFormErrors(errors); // atualiza os erros na tela
-
-    const hasErrors = Object.values(errors).some((error) => error);
-    if (hasErrors) return;
-    service
-      .save(formData)
-      .then((response) => {
-        setMsg("Customer saved successfully!");
-        setError(null);
-        resetFormData();
-      })
-      .catch((erro) => {
-        setError(erro.response?.data?.error || "Unexpected error");
-      });
-  };
-
-  const update = () => {
-    const errors = validateForm(formData); // valida tudo
-    setFormErrors(errors); // atualiza os erros na tela
-
-    const hasErrors = Object.values(errors).some((error) => error);
-    if (hasErrors) return;
-    service
-      .update(formData)
-      .then((response) => {
-        setMsg("Customer saved successfully!");
-        setError(null);
-        resetFormData();
-      })
-      .catch((erro) => {
-        setError(erro.response?.data?.error || "Unexpected error");
-      });
-  };
 
   return (
     <>
       <header>
         <div className="max-w-5xl mx-auto py-6">
           <h1 className="text-3xl font-bold tracking-tight text-white">
-            Register Client
+            {isEditing ? "Update Client" : "Register Client"}
           </h1>
         </div>
       </header>
@@ -233,7 +179,8 @@ export default function CustomerRegisterForm() {
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
                 onChange={(event) => setQuery(event.target.value)}
-                displayValue={(state) => state?.nome || ""}
+                value={formData.address?.state || ""}
+                displayValue={(state) => (state?.nome ? state.nome : "")}
                 name="address.state"
               />
               {formErrors["address.state"] && (
@@ -250,7 +197,7 @@ export default function CustomerRegisterForm() {
                   filteredStates.map((state) => (
                     <ComboboxOption
                       key={state.sigla}
-                      value={state}
+                      value={state.nome}
                       className={({ active }) =>
                         clsx(
                           "cursor-default select-none px-4 py-2",
@@ -327,7 +274,7 @@ export default function CustomerRegisterForm() {
         </div>
       </div>
 
-      {/* Renderiza o diálogo somente se houver erro */}
+      {/* Renderiza o diálogo somente se houver erro ou msg */}
       {(error || msg) && (
         <Dialog
           erro={error}

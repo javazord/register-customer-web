@@ -21,11 +21,11 @@ export default function CustomerTable({ customers }) {
   const service = new CustomerService();
 
   // atualiza customerList sempre que "customers" mudar
-  useEffect(() => {
-    if (customers) {
-      setCustomerList(customers);
-    }
-  }, [customers]);
+  //useEffect(() => {
+  //  if (customers) {
+  //    setCustomerList(customers);
+  //  }
+  //}, [customers]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -169,6 +169,11 @@ export default function CustomerTable({ customers }) {
                 ))}
               </tbody>
             </table>
+            {currentItems.length === 0 && (
+              <div className="text-center text-gray-500 py-4">
+                Customers not found.
+              </div>
+            )}
           </div>
 
           {/* Paginação */}
