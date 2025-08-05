@@ -4,7 +4,7 @@ export default function CustomerCard({ customers }) {
     5
   );
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 w-full h-full">
+    <div className="shadow-md shadow-slate-700 bg-white rounded-2xl shadow-md p-6 w-full h-full">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Last 5 Customers
       </h2>

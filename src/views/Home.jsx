@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CustomerService from "../app/service/customer/customerService";
 import CustomerCard from "../components/card/CustomerCard";
 import TotalCustomersCard from "../components/card/TotalCustomersCard";
+import Carousel from "../components/Carousel";
 
 export default function Home() {
   const [customers, setCustomers] = useState([]);
@@ -28,15 +29,21 @@ export default function Home() {
       <header>
         <div className="max-w-6xl mx-auto py-6">
           <h1 className="text-3xl font-bold tracking-tight text-white">
-            Bem Vindo(a)!
+            Welcome!
           </h1>
         </div>
       </header>
 
-      <div className="flex flex-row justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">
+      <div className="flex flex-col items-center gap-8 w-full px-4 pb-3">
+        {/* Cards lado a lado */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
           <CustomerCard customers={customers} />
           <TotalCustomersCard total={total} />
+        </div>
+
+        {/* Carousel abaixo ocupando todo espaço */}
+        <div className="w-full">
+          <Carousel />
         </div>
       </div>
     </>

@@ -1,72 +1,98 @@
-import {
-  CloudArrowUpIcon,
-  LockClosedIcon,
-  ServerIcon,
-} from "@heroicons/react/20/solid";
-
-const features = [
-  {
-    name: "Push to deploy.",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
-    icon: CloudArrowUpIcon,
-  },
-  {
-    name: "SSL certificates.",
-    description:
-      "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
-    icon: LockClosedIcon,
-  },
-  {
-    name: "Database backups.",
-    description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
-    icon: ServerIcon,
-  },
-];
+import Carousel from "../../components/Carousel";
 
 export default function About() {
   return (
-    <div className="overflow-hidden py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-          <div className="lg:pr-8 lg:pt-4">
-            <div className="lg:max-w-lg">
-              <h2 className="text-base/7 font-semibold text-indigo-400">
-                Deploy faster
-              </h2>
-              <p className="mt-2 text-pretty text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                A better workflow
-              </p>
-              <p className="mt-6 text-lg/8 text-gray-300">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Maiores impedit perferendis suscipit eaque, iste dolor
-                cupiditate blanditiis ratione.
-              </p>
-              <dl className="mt-10 max-w-xl space-y-8 text-base/7 text-gray-400 lg:max-w-none">
-                {features.map((feature) => (
-                  <div key={feature.name} className="relative pl-9">
-                    <dt className="inline font-semibold text-white">
-                      <feature.icon
-                        aria-hidden="true"
-                        className="absolute left-1 top-1 size-5 text-indigo-400"
-                      />
-                      {feature.name}
-                    </dt>{" "}
-                    <dd className="inline">{feature.description}</dd>
-                  </div>
-                ))}
-              </dl>
+    <div className="shadow-md shadow-slate-700 flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-8 md:p-12">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Sobre o Projeto
+        </h1>
+
+        <p className="text-gray-700 text-lg mb-4">
+          Sistema desenvolvido com o objetivo de gerenciar clientes de forma
+          simples e eficiente. Utilizei tecnologias modernas para criar uma
+          aplicação fullstack funcional, responsiva e com foco em boas práticas
+          de desenvolvimento.
+        </p>
+
+        <section className="mt-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            🚀 Tecnologias Utilizadas
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center text-sm text-gray-700">
+            <div className="bg-gray-100 py-2 px-3 rounded-lg">⚛️ React</div>
+            <div className="bg-gray-100 py-2 px-3 rounded-lg">
+              🎨 Tailwind CSS
             </div>
+            <div className="bg-gray-100 py-2 px-3 rounded-lg">
+              ☕ Java (Spring Boot)
+            </div>
+            <div className="bg-gray-100 py-2 px-3 rounded-lg">🐬 MySQL</div>
+            <div className="bg-gray-100 py-2 px-3 rounded-lg">📦 Axios</div>
+            <div className="bg-gray-100 py-2 px-3 rounded-lg">🔄 REST API</div>
           </div>
-          <img
-            alt="Product screenshot"
-            src="https://tailwindcss.com/plus-assets/img/component-images/dark-project-app-screenshot.png"
-            width={2432}
-            height={1442}
-            className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-white/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
-          />
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            🧠 Minhas Responsabilidades
+          </h2>
+          <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <li>Criação do frontend com React e Tailwind</li>
+            <li>Implementação da API REST com Spring Boot</li>
+            <li>Modelagem do banco de dados com MySQL</li>
+            <li>Integração frontend-backend usando Axios</li>
+            <li>Componentização e organização de código</li>
+          </ul>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            💡 Motivação do Projeto
+          </h2>
+          <p className="text-gray-700">
+            Criei este projeto como parte do meu portfólio para demonstrar minha
+            capacidade de construir soluções completas utilizando tecnologias
+            modernas. Meu foco foi aplicar conceitos de API REST, design
+            responsivo e código limpo, simulando um cenário real de aplicação.
+          </p>
+        </section>
+
+        <Carousel />
+
+        <div className="grid grid-cols-2 gap-2">
+          <section className="mt-10 text-center">
+            <a
+              href="https://github.com/javazord/register-customer-api"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow hover:bg-indigo-700 transition"
+            >
+              Repositório Back-End
+            </a>
+          </section>
+          <section className="mt-10 text-center">
+            <a
+              href="https://github.com/javazord/register-customer-web"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow hover:bg-indigo-700 transition"
+            >
+              Repositório Front-End
+            </a>
+          </section>
         </div>
+
+        <footer className="mt-12 text-center text-sm text-gray-500">
+          Desenvolvido por <strong>Mateus Bastos Marques</strong> ·{" "}
+          <a
+            href="https://github.com/javazord"
+            className="text-indigo-600 underline"
+            target="_blank"
+          >
+            LinkedIn
+          </a>
+        </footer>
       </div>
     </div>
   );

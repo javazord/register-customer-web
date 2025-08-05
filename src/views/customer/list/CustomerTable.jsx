@@ -112,7 +112,7 @@ export default function CustomerTable({ customers }) {
           </Fieldset>
         </div>
       </div>
-      <div className="overflow-x-auto p-6 bg-gray-900 text-white">
+      <div className="overflow-x-auto p-6 text-white">
         <div className="max-w-5xl mx-auto bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
           <div className="max-h-96 overflow-y-auto">
             <table className="min-w-full text-sm">

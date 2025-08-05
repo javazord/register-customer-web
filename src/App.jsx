@@ -4,7 +4,7 @@ import AppRoutes from "./routes/AppRoutes";
 export default function App() {
   return (
     <>
-      <div className="h-screen bg-slate-900">
+      <div className="bg-slate-900 min-h-screen">
         <Navbar />
         <AppRoutes />
       </div>
