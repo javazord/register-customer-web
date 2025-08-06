@@ -13,8 +13,8 @@ import { Link, useLocation } from "react-router-dom";
 const navigation = [
   { name: "Dashboard", href: "/" },
   { name: "Home", href: "/home" },
-  { name: "Register", href: "/registercustomer" },
-  { name: "List", href: "/listcustomer" },
+  { name: "Register", href: "/register-customer" },
+  { name: "List", href: "/list-customer" },
   { name: "About", href: "/about" },
 ];
 

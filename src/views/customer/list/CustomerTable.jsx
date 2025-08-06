@@ -21,11 +21,11 @@ export default function CustomerTable({ customers }) {
   const service = new CustomerService();
 
   // atualiza customerList sempre que "customers" mudar
-  //useEffect(() => {
-  //  if (customers) {
-  //    setCustomerList(customers);
-  //  }
-  //}, [customers]);
+  useEffect(() => {
+    if (customers) {
+      setCustomerList(customers);
+    }
+  }, [customers]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -41,7 +41,7 @@ export default function CustomerTable({ customers }) {
   };
 
   const editCustomer = (customer) => {
-    navigate(`/editcustomer`, { state: { customer } });
+    navigate(`/edit-customer`, { state: { customer } });
   };
 
   const searchCustomer = () => {
@@ -205,6 +205,7 @@ export default function CustomerTable({ customers }) {
           onClose={() => {
             setMsg(null);
             setError(null);
+            navigate("/list-customer");
           }}
         />
       )}

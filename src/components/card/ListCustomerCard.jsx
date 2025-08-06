@@ -21,7 +21,7 @@ export default function ListCustomerCard({ customers }) {
             {displayedCustomers.map((customer, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-2">{customer.name}</td>
-                <td className="px-8 py-2">{customer.lastName}</td>
+                <td className="px-4 py-2">{customer.lastName}</td>
                 <td className="px-4 py-2">{customer.email}</td>
               </tr>
             ))}

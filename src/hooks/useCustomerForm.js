@@ -2,6 +2,7 @@ import { useState } from "react";
 import { formatCpf } from "../utils/formatters";
 import { validateField, validateForm } from "../utils/validators";
 import CustomerService from "../app/service/customer/customerService";
+import { useNavigate } from "react-router-dom";
 
 export default function useCustomerForm() {
   const [formData, setFormData] = useState({
@@ -25,7 +26,6 @@ export default function useCustomerForm() {
     cpf: "",
     email: "",
   });
-
   const [error, setError] = useState(null);
   const [msg, setMsg] = useState(null);
   const [isEditing, setIsEditing] = useState(false);

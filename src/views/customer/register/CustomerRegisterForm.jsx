@@ -13,7 +13,7 @@ import clsx from "clsx";
 import { states } from "../../../data/states";
 import Dialog from "../../../components/modal/Dialog";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useCustomerForm from "../../../hooks/useCustomerForm";
 
 export default function CustomerRegisterForm() {
@@ -34,19 +34,20 @@ export default function CustomerRegisterForm() {
     setError,
     setMsg,
   } = useCustomerForm();
-  const [query, setQuery] = useState("");
+  const [stateLowerCase, setStateLowerCase] = useState("");
+  const navigate = useNavigate();
+
   const filteredStates =
-    query === ""
+    stateLowerCase === ""
       ? states
       : states.filter((state) =>
-          state.nome.toLowerCase().includes(query.toLowerCase())
+          state.nome.toLowerCase().includes(stateLowerCase.toLowerCase())
         );
 
   // Carrega dados do state se vierem na navegação
   useEffect(() => {
     if (location.state?.customer) {
       setFormData(location.state.customer);
-      console.log(location.state.customer);
       setIsEditing(true);
     } else {
       resetFormData();
@@ -74,9 +75,8 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="name"
-              value={formData.name}
+              value={formData.name || ""}
               onChange={handleChange}
-              aria-hidden={true}
             />
             {formErrors.name && (
               <p className="text-red-500 text-sm">{formErrors.name}</p>
@@ -92,7 +92,7 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="lastName"
-              value={formData.lastName}
+              value={formData.lastName || ""}
               onChange={handleChange}
             />
             {formErrors.lastName && (
@@ -113,7 +113,7 @@ export default function CustomerRegisterForm() {
               name="cpf"
               inputMode="numeric"
               maxLength={14}
-              value={getFormattedCpf(formData.cpf)}
+              value={getFormattedCpf(formData.cpf) || ""}
               onChange={handleChange}
               placeholder="000.000.000-00"
             />
@@ -131,7 +131,7 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="email"
-              value={formData.email}
+              value={formData.email || ""}
               placeholder="fulano@gmail.com"
               onChange={handleChange}
             />
@@ -149,7 +149,7 @@ export default function CustomerRegisterForm() {
               )}
               type="text"
               name="phone"
-              value={formData.phone}
+              value={formData.phone || ""}
               placeholder="(99) 99999-9999"
               onChange={handleChange}
             />
@@ -178,9 +178,8 @@ export default function CustomerRegisterForm() {
                 className={clsx(
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
-                onChange={(event) => setQuery(event.target.value)}
-                value={formData.address?.state || ""}
-                displayValue={(state) => (state?.nome ? state.nome : "")}
+                onChange={handleChange}
+                displayValue={(state) => state?.nome || ""}
                 name="address.state"
               />
               {formErrors["address.state"] && (
@@ -197,7 +196,7 @@ export default function CustomerRegisterForm() {
                   filteredStates.map((state) => (
                     <ComboboxOption
                       key={state.sigla}
-                      value={state.nome}
+                      value={state}
                       className={({ active }) =>
                         clsx(
                           "cursor-default select-none px-4 py-2",
@@ -282,6 +281,7 @@ export default function CustomerRegisterForm() {
           onClose={() => {
             setError(null);
             setMsg(null);
+            navigate("/list-customer");
           }}
         />
       )}
