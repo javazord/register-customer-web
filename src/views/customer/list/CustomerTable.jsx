@@ -1,79 +1,29 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import CustomerService from "../../../app/service/customer/customerService";
-import Dialog from "../../../components/modal/Dialog";
 import { Button, Field, Fieldset, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
-import { useNavigate } from "react-router-dom";
 
-export default function CustomerTable({ customers }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-  if (!customers) customers = []; // evita erro se for null
-  const [customerList, setCustomerList] = useState([]);
-  const [msg, setMsg] = useState(null);
-  const [error, setError] = useState(null);
-  const [customer, setCustomer] = useState({
-    cpf: "",
-    email: "",
-  });
-  const navigate = useNavigate();
-  const service = new CustomerService();
-
-  // atualiza customerList sempre que "customers" mudar
-  useEffect(() => {
-    if (customers) {
-      setCustomerList(customers);
-    }
-  }, [customers]);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = customerList.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(customerList.length / itemsPerPage);
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
-
-  const editCustomer = (customer) => {
-    navigate(`/edit-customer`, { state: { customer } });
-  };
-
-  const searchCustomer = () => {
-    try {
-      service.search(customer).then((response) => {
-        setCustomerList(response.data);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const deleteCustomer = (id) => {
-    service
-      .erase(id)
-      .then((response) => {
-        setMsg("Customer with id " + id + " deleted!");
-        setCustomerList(customerList.filter((c) => c.id !== id));
-        setError(null);
-      })
-      .catch((erro) => {
-        setError(erro.response?.data?.error || "Unexpected error");
-      });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCustomer((prev) => ({ ...prev, [name]: value }));
-  };
-
+export default function CustomerTable({
+  customer,
+  onChange,
+  onSearch,
+  currentItems,
+  currentPage,
+  totalPages,
+  onNext,
+  onPrev,
+  onEdit,
+  onDelete,
+}) {
   return (
     <>
+      <header>
+        <div className="max-w-5xl mx-auto py-6">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            List Client
+          </h1>
+        </div>
+      </header>
+
       <div className="overflow-x-auto mb-4 text-sm ">
         <div className="max-w-5xl mx-auto">
           <Fieldset className="grid grid-cols-3 gap-4">
@@ -86,7 +36,7 @@ export default function CustomerTable({ customers }) {
                 type="text"
                 name="cpf"
                 value={customer.cpf}
-                onChange={handleChange}
+                onChange={onChange}
               />
             </Field>
             <Field>
@@ -98,13 +48,13 @@ export default function CustomerTable({ customers }) {
                 type="text"
                 name="email"
                 value={customer.email}
-                onChange={handleChange}
+                onChange={onChange}
               />
             </Field>
             <div className="flex items-end">
               <Button
                 className="rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500"
-                onClick={searchCustomer}
+                onClick={onSearch}
               >
                 Search
               </Button>
@@ -112,6 +62,7 @@ export default function CustomerTable({ customers }) {
           </Fieldset>
         </div>
       </div>
+
       <div className="overflow-x-auto p-6 text-white">
         <div className="max-w-5xl mx-auto bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
           <div className="max-h-96 overflow-y-auto">
@@ -152,14 +103,14 @@ export default function CustomerTable({ customers }) {
                         <button
                           className="text-green-500 hover:text-green-400"
                           title="Editar"
-                          onClick={() => editCustomer(customer)}
+                          onClick={() => onEdit(customer)}
                         >
                           <PencilSquareIcon className="h-5 w-5" />
                         </button>
                         <button
                           className="text-red-500 hover:text-red-400"
                           title="Excluir"
-                          onClick={() => deleteCustomer(customer.id)}
+                          onClick={() => onDelete(customer.id)}
                         >
                           <TrashIcon className="h-5 w-5" />
                         </button>
@@ -176,10 +127,9 @@ export default function CustomerTable({ customers }) {
             )}
           </div>
 
-          {/* Paginação */}
           <div className="flex items-center justify-between p-4 border-t border-gray-700">
             <button
-              onClick={handlePrev}
+              onClick={onPrev}
               disabled={currentPage === 1}
               className="text-sm text-white bg-gray-600 px-3 py-1 rounded disabled:opacity-30"
             >
@@ -189,7 +139,7 @@ export default function CustomerTable({ customers }) {
               Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={handleNext}
+              onClick={onNext}
               disabled={currentPage === totalPages}
               className="text-sm text-white bg-gray-600 px-3 py-1 rounded disabled:opacity-30"
             >
@@ -198,17 +148,6 @@ export default function CustomerTable({ customers }) {
           </div>
         </div>
       </div>
-      {(error || msg) && (
-        <Dialog
-          msg={msg}
-          erro={error}
-          onClose={() => {
-            setMsg(null);
-            setError(null);
-            navigate("/list-customer");
-          }}
-        />
-      )}
     </>
   );
 }
