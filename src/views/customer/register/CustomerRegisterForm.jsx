@@ -1,0 +1,283 @@
+import {
+  Field,
+  Label,
+  Input,
+  Fieldset,
+  Button,
+  Combobox,
+  ComboboxInput,
+  ComboboxOptions,
+  ComboboxOption,
+} from "@headlessui/react";
+import clsx from "clsx";
+import { states } from "../../../data/states";
+import Dialog from "../../../components/modal/Dialog";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import useCustomerForm from "../../../hooks/useCustomerForm";
+import ErrorsForm from "../../../components/errors/ErrorsForm";
+
+export default function CustomerRegisterForm() {
+  const location = useLocation();
+  const {
+    formData,
+    formErrors,
+    error,
+    msg,
+    isEditing,
+    handleChange,
+    create,
+    update,
+    resetFormData,
+    getFormattedCpf,
+    setFormData,
+    setIsEditing,
+    setError,
+    setMsg,
+  } = useCustomerForm();
+  const [stateLowerCase, setStateLowerCase] = useState("");
+  const navigate = useNavigate();
+
+  const filteredStates =
+    stateLowerCase === ""
+      ? states
+      : states.filter((state) =>
+          state.nome.toLowerCase().includes(stateLowerCase.toLowerCase())
+        );
+
+  // Carrega dados do state se vierem na navegação
+  useEffect(() => {
+    if (location.state?.customer) {
+      setFormData(location.state.customer);
+      setIsEditing(true);
+    } else {
+      resetFormData();
+      setIsEditing(false);
+    }
+  }, [location.state]);
+
+  return (
+    <>
+      <header>
+        <div className="max-w-5xl mx-auto py-6">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            {isEditing ? "Update Client" : "Register Client"}
+          </h1>
+        </div>
+      </header>
+      <div className="max-w-5xl mx-auto bg-gray-800 shadow-md shadow-slate-700 rounded-lg  p-3 m-5">
+        {/* - PESSOAL - */}
+        <Fieldset className="grid grid-cols-2 gap-4">
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">Name</Label>
+            <Input
+              className={clsx(
+                "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+              )}
+              type="text"
+              name="name"
+              value={formData.name || ""}
+              onChange={handleChange}
+            />
+            <ErrorsForm error={formErrors.name} />
+          </Field>
+          <Field>
+            <Label className="block text-sm/6 font-medium text-white">
+              Last Name
+            </Label>
+            <Input
+              className={clsx(
+                "block w-full border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-sm/6 text-white"
+              )}
+              type="text"
+              name="lastName"
+              value={formData.lastName || ""}
+              onChange={handleChange}
+            />
+            <ErrorsForm error={formErrors.lastName} />
+          </Field>
+        </Fieldset>
+        <Fieldset className="grid grid-cols-3 gap-4">
+          <Field>
+            <Label className="block text-sm/6 font-medium text-white">
+              CPF
+            </Label>
+            <Input
+              className={clsx(
+                "block w-full border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-sm/6 text-white"
+              )}
+              type="text"
+              name="cpf"
+              inputMode="numeric"
+              maxLength={14}
+              value={getFormattedCpf(formData.cpf) || ""}
+              onChange={handleChange}
+              placeholder="000.000.000-00"
+            />
+            <ErrorsForm error={formErrors.cpf} />
+          </Field>
+          <Field>
+            <Label className="block text-sm/6 font-medium text-white">
+              E-mail
+            </Label>
+            <Input
+              className={clsx(
+                "block w-full border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-sm/6 text-white "
+              )}
+              type="text"
+              name="email"
+              value={formData.email || ""}
+              placeholder="fulano@gmail.com"
+              onChange={handleChange}
+            />
+            <ErrorsForm error={formErrors.email} />
+          </Field>
+          <Field>
+            <Label className="block text-sm/6 font-medium text-white">
+              Phone
+            </Label>
+            <Input
+              className={clsx(
+                "block w-full border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-sm/6 text-white "
+              )}
+              type="text"
+              name="phone"
+              value={formData.phone || ""}
+              placeholder="(99) 99999-9999"
+              onChange={handleChange}
+            />
+          </Field>
+        </Fieldset>
+
+        {/* - DIVISOR - */}
+        <div className="flex items-center gap-1 mt-10 ">
+          <div className="w-10 divide-x-0 border border-1 border-dashed"></div>
+          <p className="font-bold text-white pb-1">Address</p>
+          <div className="flex-1 divide-x-0 border border-1 border-dashed"></div>
+        </div>
+
+        {/* - ENDEREÇO - */}
+        <Fieldset className="grid grid-cols-3 gap-4">
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">State</Label>
+            <Combobox
+              value={
+                states.find((s) => s.nome === formData.address?.state) || ""
+              }
+              name="address.state"
+              onChange={(value) => handleChange("address.state", value)}
+            >
+              <ComboboxInput
+                className={clsx(
+                  "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+                )}
+                onChange={(event) => setStateLowerCase(event.target.value)}
+                displayValue={(state) => state?.nome || ""}
+                name="address.state"
+              />
+              {formErrors["address.state"] && (
+                <p className="text-red-500 text-sm">
+                  {formErrors["address.state"]}
+                </p>
+              )}
+              <ComboboxOptions className="absolute mt-1 max-h-60 overflow-auto rounded-md bg-white shadow-lg">
+                {filteredStates.length === 0 ? (
+                  <div className="px-4 py-2 text-gray-500">
+                    Nenhum estado encontrado
+                  </div>
+                ) : (
+                  filteredStates.map((state) => (
+                    <ComboboxOption
+                      key={state.sigla}
+                      value={state}
+                      className={({ active }) =>
+                        clsx(
+                          "cursor-default select-none px-4 py-2",
+                          active ? "bg-blue-500 text-white" : "text-gray-900"
+                        )
+                      }
+                    >
+                      {state.nome}
+                    </ComboboxOption>
+                  ))
+                )}
+              </ComboboxOptions>
+            </Combobox>
+          </Field>
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">City</Label>
+            <Input
+              className={clsx(
+                "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+              )}
+              type="text"
+              name="address.city"
+              value={formData.address?.city || ""}
+              onChange={handleChange}
+            />
+          </Field>
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">ZipCode</Label>
+            <Input
+              className={clsx(
+                "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+              )}
+              type="text"
+              name="address.zipCode"
+              value={formData.address?.zipCode || ""}
+              onChange={handleChange}
+            />
+          </Field>
+        </Fieldset>
+        <Fieldset className="grid grid-cols-2 gap-4">
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">Street</Label>
+            <Input
+              className={clsx(
+                "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+              )}
+              type="text"
+              name="address.street"
+              value={formData.address?.street || ""}
+              onChange={handleChange}
+            />
+          </Field>
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">District</Label>
+            <Input
+              className={clsx(
+                "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
+              )}
+              type="text"
+              name="address.district"
+              value={formData.address?.district || ""}
+              onChange={handleChange}
+            />
+          </Field>
+        </Fieldset>
+
+        <div className="grid justify-end">
+          <Button
+            className="block mt-3 rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500"
+            onClick={isEditing ? update : create}
+          >
+            {isEditing ? "Update" : "Save"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Renderiza o diálogo somente se houver erro ou msg */}
+      {(error || msg) && (
+        <Dialog
+          erro={error}
+          msg={msg}
+          onClose={() => {
+            setError(null);
+            setMsg(null);
+            navigate("/list-customer");
+          }}
+        />
+      )}
+    </>
+  );
+}
