@@ -15,6 +15,7 @@ import Dialog from "../../../components/modal/Dialog";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useCustomerForm from "../../../hooks/useCustomerForm";
+import ErrorsForm from "../../../components/errors/ErrorsForm";
 
 export default function CustomerRegisterForm() {
   const location = useLocation();
@@ -78,9 +79,7 @@ export default function CustomerRegisterForm() {
               value={formData.name || ""}
               onChange={handleChange}
             />
-            {formErrors.name && (
-              <p className="text-red-500 text-sm">{formErrors.name}</p>
-            )}
+            <ErrorsForm error={formErrors.name} />
           </Field>
           <Field>
             <Label className="block text-sm/6 font-medium text-white">
@@ -95,9 +94,7 @@ export default function CustomerRegisterForm() {
               value={formData.lastName || ""}
               onChange={handleChange}
             />
-            {formErrors.lastName && (
-              <p className="text-red-500 text-sm">{formErrors.lastName}</p>
-            )}
+            <ErrorsForm error={formErrors.lastName} />
           </Field>
         </Fieldset>
         <Fieldset className="grid grid-cols-3 gap-4">
@@ -117,9 +114,7 @@ export default function CustomerRegisterForm() {
               onChange={handleChange}
               placeholder="000.000.000-00"
             />
-            {formErrors.cpf && (
-              <p className="text-red-500 text-sm">{formErrors.cpf}</p>
-            )}
+            <ErrorsForm error={formErrors.cpf} />
           </Field>
           <Field>
             <Label className="block text-sm/6 font-medium text-white">
@@ -135,9 +130,7 @@ export default function CustomerRegisterForm() {
               placeholder="fulano@gmail.com"
               onChange={handleChange}
             />
-            {formErrors.email && (
-              <p className="text-red-500 text-sm">{formErrors.email}</p>
-            )}
+            <ErrorsForm error={formErrors.email} />
           </Field>
           <Field>
             <Label className="block text-sm/6 font-medium text-white">
@@ -178,7 +171,7 @@ export default function CustomerRegisterForm() {
                 className={clsx(
                   "block w-full mr-2 border border-white rounded-lg bg-gray-700 px-3 py-1.5 text-white"
                 )}
-                onChange={handleChange}
+                onChange={(event) => setStateLowerCase(event.target.value)}
                 displayValue={(state) => state?.nome || ""}
                 name="address.state"
               />
