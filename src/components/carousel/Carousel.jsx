@@ -7,11 +7,11 @@ import { useState } from "react";
 export default function Carousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const screenshots = [
-    "../../../public/assets/home.jpg",
-    "../../../public/assets/register.jpg",
-    "../../../public/assets/list.jpg",
-    "../../../public/assets/about1.jpg",
-    "../../../public/assets/about2.jpg",
+    "/assets/home.jpg",
+    "/assets/register.jpg",
+    "/assets/list.jpg",
+    "/assets/about1.jpg",
+    "/assets/about2.jpg",
   ];
 
   const prevSlide = () => {
