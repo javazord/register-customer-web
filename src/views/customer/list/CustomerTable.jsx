@@ -78,46 +78,47 @@ export default function CustomerTable({
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((customer, idx) => (
-                  <tr
-                    key={customer.id}
-                    className={idx % 2 === 0 ? "bg-gray-900" : "bg-gray-800"}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.cpf}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.address?.state}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex gap-4 items-center">
-                        <button
-                          className="text-green-500 hover:text-green-400"
-                          title="Editar"
-                          onClick={() => onEdit(customer)}
-                        >
-                          <PencilSquareIcon className="h-5 w-5" />
-                        </button>
-                        <button
-                          className="text-red-500 hover:text-red-400"
-                          title="Excluir"
-                          onClick={() => onDelete(customer.id)}
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {Array.isArray(currentItems) &&
+                  currentItems.map((customer, idx) => (
+                    <tr
+                      key={customer.id}
+                      className={idx % 2 === 0 ? "bg-gray-900" : "bg-gray-800"}
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {customer.id}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {customer.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {customer.email}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {customer.cpf}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {customer.address?.state}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex gap-4 items-center">
+                          <button
+                            className="text-green-500 hover:text-green-400"
+                            title="Editar"
+                            onClick={() => onEdit(customer)}
+                          >
+                            <PencilSquareIcon className="h-5 w-5" />
+                          </button>
+                          <button
+                            className="text-red-500 hover:text-red-400"
+                            title="Excluir"
+                            onClick={() => onDelete(customer.id)}
+                          >
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
             {currentItems.length === 0 && (
